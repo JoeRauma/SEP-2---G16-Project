@@ -1,6 +1,6 @@
 USE `joomla_ncc`;
 
-CREATE TABLE `app_users` (
+CREATE TABLE IF NOT EXISTS `app_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `first_name` varchar(255) DEFAULT NULL,
   `last_name` varchar(255) DEFAULT NULL,
@@ -14,13 +14,13 @@ CREATE TABLE `app_users` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 
-CREATE TABLE `app_interests_groups` (
+CREATE TABLE IF NOT EXISTS `app_interests_groups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `group_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
-CREATE TABLE `app_interests` (
+CREATE TABLE IF NOT EXISTS `app_interests` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_group` int(11) DEFAULT NULL,
   `interest_name` varchar(255) DEFAULT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE `app_interests` (
 	FOREIGN KEY (id_group) REFERENCES app_interests_groups (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=368 DEFAULT CHARSET=utf8;
 
-CREATE TABLE `app_user_interests` (
+CREATE TABLE IF NOT EXISTS `app_user_interests` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_user` int(11) DEFAULT NULL,
   `id_interest` int(11) DEFAULT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE `app_user_interests` (
 	FOREIGN KEY (id_interest) REFERENCES app_interests (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8;
 
-CREATE TABLE `app_feedback` (
+CREATE TABLE IF NOT EXISTS `app_feedback` (
   `id` int(11) NOT NULL,
   `date_time` datetime DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE `app_feedback` (
 	FOREIGN KEY (user_id) REFERENCES app_users (id)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
-CREATE TABLE `app_user_comments` (
+CREATE TABLE IF NOT EXISTS `app_user_comments` (
   `id` int(11) NOT NULL,
   `id_user_reviewer` int(11) DEFAULT NULL,
   `id_user_target` int(11) DEFAULT NULL,
@@ -71,14 +71,10 @@ CREATE TABLE `app_user_comments` (
 	FOREIGN KEY (id_user_target) REFERENCES app_users (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `app_user_groups` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 CHARSET=utf8;
-
-CREATE TABLE `app_formed_user_groups` (
+CREATE TABLE IF NOT EXISTS `app_formed_user_groups` (
   `id_group` int(11) NOT NULL,
   `id_user` int(11) NOT NULL,
+  PRIMARY KEY(`id_group`, `id_user`)
   CONSTRAINT `fk_user_id`
 	FOREIGN KEY (id_user) REFERENCES app_users (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
