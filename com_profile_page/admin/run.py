@@ -1,9 +1,9 @@
 import mariadb
 import sys
-import json
 from cc_matching import form_user_groups, Interest, UserId, Group
 
 # connecting to database
+
 try:
     conn = mariadb.connect(
         user="root",
@@ -11,34 +11,59 @@ try:
         host="127.0.0.1",
         port=3306,
         database="joomla_ncc"
+        
     )
 except mariadb.Error as e:
     print(f"Error connecting to MariaDB Platform: [e]")
     sys.exit(1)
 
+cur = conn.cursor(buffered=True)
 
-# read and store the data for each interests name from the DB, for printing purposes
-interest_cursor = conn.cursor(buffered=True)
-interest_cursor.execute("SELECT id, interest_name FROM app_interests;")
-all_interests: dict[int, str] = dict(interest_cursor)
+# reading the interests from the database
 
-# forming the users_to_interests dict
-user_to_interest_cursor = conn.cursor(buffered=True)
-user_to_interest_cursor.execute(
-    "SELECT User_Id, Interest_Id FROM app_user_interests;")
+cur.execute("SELECT u.id, interest_name FROM app_users u INNER JOIN app_user_interests ui ON u.id = ui.id_user INNER JOIN app_interests i ON id_interest = i.id;")
 
-users_to_interests: dict[UserId, set[Interest]] = {}
-for (user_id, interests_json) in user_to_interest_cursor:
-    interests: list[int] = json.loads(interests_json)
-    users_to_interests[user_id] = interests
+# forming the interests_to_users and users_to_interests dicts
+
+interestlist = []
+
+for (id, interest_name) in cur:
+    if interest_name not in interestlist:
+        interestlist.append(interest_name)
+
+userlist = []
+users_to_interests: dict[UserId, set[Interest]]
+users_to_interests = {}
+
+cur.scroll(-cur.rownumber)
+
+for (id, interest_name) in cur:
+    if id not in userlist:
+        userlist.append(id)
 
 
-# call the function
+for (u) in userlist:
+    cur.scroll(-cur.rownumber)
+    interests = []
+    for (id, interest_name) in cur:
+        if u == id:
+            interests.append(interest_name)
+    users_to_interests[u] = set(interests)
+
+# run the algorithm
+
 matched_groups = form_user_groups(2, 2, users_to_interests, set())
 
-# print each group
-for group in matched_groups:
-    print(
-        f"Group of {group.users} (interest: {all_interests[group.interest]})")
+# delete the old matched groups
 
-# TODO: store the groups into the database
+cur.execute("DELETE FROM app_formed_user_groups")
+conn.commit()
+
+# write the groups into app_formed_user_groups table
+
+for i, g in enumerate(matched_groups):
+    for u in g.users:
+        print(f"i: {i} u: {u})")
+        cur.execute("INSERT INTO app_formed_user_groups (id_group, id_user) VALUES (?, ?);",(i, u))
+
+conn.commit()
