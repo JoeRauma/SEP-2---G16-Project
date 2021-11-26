@@ -124,27 +124,3 @@ VALUES
   ("Rajah Gilmore","Thomas French","sed.est@aol.couk","IQX92JBU3VH","Glenna","NEM81VFZ1UR",462,"Phasellus in felis. Nulla","congue, elit sed consequat auctor,"),
   ("Claudia Mckay","Nash Mays","sed.consequat@icloud.net","QKA91BSJ6BS","Grant","FTH25EXK9TE",674,"pellentesque a, facilisis","Aenean massa. Integer"),
   ("Quinn Delacruz","Laura Herrera","a.dui@icloud.com","WXA32URR8TC","Gwendolyn","JWW68ERO6OE",870,"dui augue eu","purus, in");
-  
-INSERT INTO `app_user_interests` (`User_Id`,`Interest_Id`)
-VALUES
-  (25, '[2,3,4]'),
-  (26, '[1,3,5,6]'),
-  (27, '[2,3,4,6]'),
-  (28, '[1,4,5,6]'),
-  (29, '[1,3,4,6]'),
-  (30, '[1,2,3,4,7]'),
-  (31, '[1,2,3,5]'),
-  (32, '[1,2,5,7]'),
-  (33, '[2,4,5,6,7]'),
-  (34, '[1,2,5,6,7]'),
-  (35, '[1,2,3,5]'),
-  (36, '[1,3,5,6,4]'),
-  (37, '[2,4,6,7]'),
-  (38, '[1,2,4,5,6]'),
-  (39, '[2,4,5,7]'),
-  (40, '[1,4,6]'),
-  (41, '[2,3,5,6]'),
-  (42, '[1,4,5]'),
-  (43, '[2,3,5,6]'),
-  (44, '[2,3,4,6]');
-
